@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <windows.h>
@@ -8,8 +8,8 @@
 void start();
 void window();  //构建窗口
 struct student *creat();  //创建链表
-void delete(struct student *head,int num); //从链表中删除某学号
-
+void del(struct student *head,int num); //从链表中删除某学号
+void insert(struct student *head,struct student *p);
 void print(struct student *head);//打印链表
 
 struct student      //定义结构体
@@ -26,18 +26,59 @@ int main()
 {
 	start();
 	window();
-	struct student *stu;
+	struct student *stu,p;
 
 	stu = creat();
 	print( stu );
-
 	printf("\n\n");
-	int q;
-	printf("你想删除谁的成绩（学号）:");
-	scanf("%d",&q);
-        delete( stu ,q);
-        n=n-1;
-        print( stu );
+
+	char o;
+	printf("你是否希望删除谁的成绩( y or n )\n");
+	fflush(stdin);
+	scanf("%c",&o);
+	if(o=='y')      //暂不考虑输入不是y也不是n的情况
+	{
+		int q;
+		printf("你想删除谁的成绩（学号）:");
+		scanf("%d",&q);
+		del( stu ,q);
+		print( stu );
+		printf("\n你是否希望添加谁的成绩( y or n )\n");
+		fflush(stdin);
+		scanf("%c",&o);
+		if(o=='y')
+		{
+			printf("\n你想插入学生的学号为：");
+			scanf("%d",&p.num);
+			printf("你想插入学生的姓名是：");
+			scanf("%s",&p.name);
+			printf("你想插入学生的成绩是:");
+			scanf("%f",&p.score);
+			insert( stu ,&p);
+			print( stu );
+		}
+	}
+	else
+	{
+		printf("\n你是否希望添加谁的成绩( y or n )\n");
+		fflush(stdin);
+		scanf("%c",&o);
+		if(o=='y')
+		{
+			printf("\n你想插入学生的学号为：");
+			scanf("%d",&p.num);
+			printf("你想插入学生的姓名是：");
+			scanf("%s",&p.name);
+			printf("你想插入学生的成绩是:");
+			scanf("%f",&p.score);
+			insert( stu ,&p);
+			print( stu );
+		}
+		else
+		{
+			exit(0);
+		}
+	}
 }
 
 void start()
@@ -336,12 +377,21 @@ void start()
 
 	system("color FD");
 
-
-
-
-
-        Sleep(2000);
-        system("cls");
+	system("cls");
+        printf("\n\n\n   是否希望进入本垃圾的\n   智障学生管理系统( y or n )\n");
+        char m;
+        scanf("%c",&m);
+        if(m=='y')
+	{
+		system("cls");
+	}
+	else
+	{
+		system("cls");
+		printf("\n\n\n\n\n\t谢谢观看\n\n\n\n\n\n");
+		Sleep(2000);
+		exit(0);
+	}
         /*
 	W = 87 || 119
 	S = 83 || 115
@@ -370,7 +420,7 @@ void start()
 void window()
 {
 	system("title 本垃圾的智障学生管理系统");
-        system("mode con cols=60 lines=45");
+        system("mode con cols=60 lines=70");
 	system("color");
         system("color FC");
 }
@@ -382,7 +432,7 @@ struct student *creat()
 
 	p1=p2=(struct student *)malloc(LEN);
 
-	printf("请输入学号");
+	printf("请按学号从小到大顺序输入\n(如果不想输入了，输入学号为0即可)\n输入学号:");
 	scanf("%d",&p1->num);
 
 	printf("请输入姓名:");
@@ -411,7 +461,8 @@ struct student *creat()
 		p1= (struct student *)malloc(LEN);
 		printf("请输入学号");
 	        scanf("%d",&p1->num);
-
+	        if(p1->num==0)
+			break;
 	        printf("请输入姓名:");
 	        //gets(p1->name);
 
@@ -474,7 +525,7 @@ void print(struct student *head)
 };
 */
 
-void delete(struct student *head,int num)
+void del(struct student *head,int num)
 {
 	struct student *p1,*p2;
 	p1=head;
@@ -501,5 +552,37 @@ void delete(struct student *head,int num)
 
 			printf("没有这个人");
 		}
+	n=n-1;
+	return head;
+}
+
+void insert(struct student *head,struct student *p)
+{
+	struct student *p0,*p1,*p2;
+	p0=p;
+	p1=head;
+	while((p0->num > p1->num)&&(p1->next != NULL))
+	{
+		p2=p1;
+		p1=p1->next;
+	}
+	if(p0->num <= p1->num)
+	{
+		if(p1==head)
+		{
+			p0->next=p1;
+		}
+		else
+		{
+			p2->next = p0;
+			p0->next = p1;
+		}
+	}
+	else
+	{
+		p1->next=p0;
+		p0->next=NULL;
+	}
+	n=n+1;
 	return head;
 }
